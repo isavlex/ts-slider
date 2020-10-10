@@ -1,0 +1,19 @@
+Demands☝️
+1. minValue currentValue maxValue
+2. sizeOfStep
+3. verticalView || gorizontalView (default)
+4. singleValue || rangeValue
+5. floatIndicator (boolean)
+6. scaleOfValues - interactive
+7. progressBar - colored
+8. responsive
+
+
+TypeScript
+1. not use "any"
+2. strict
+
+MVC
+1. Model
+2. View
+3. Controller

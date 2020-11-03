@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
@@ -57,6 +58,10 @@ module.exports = {
         to: path.resolve(__dirname, 'dist')
       }
     ]),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    }),
     new MiniCssExtractPlugin({
       filename: filename('css')
     }),

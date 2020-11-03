@@ -1,7 +1,7 @@
 Demands☝️
 1. minValue currentValue maxValue
 2. sizeOfStep
-3. verticalView || gorizontalView (default)
+3. verticalView || horizontalView (default)
 4. singleValue || rangeValue
 5. floatIndicator (boolean)
 6. scaleOfValues - interactive

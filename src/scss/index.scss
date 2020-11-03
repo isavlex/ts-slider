@@ -1,3 +1,71 @@
-body {
-  background-color: green;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
+body {
+  background-color: #ccc;
+}
+
+.box {
+  max-width: 400px;
+  margin-left: 600px;
+}
+
+$height-interval: 6px;
+$side-handler: 12px;
+$border-handler: 2px;
+$full-side: ($border-handler * 2) + $side-handler;
+
+// .range-slider {
+
+// }
+
+.range-slider__head {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.range-slider__value {
+  user-select: none;
+}
+
+.range-slider__body {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  border: 1px solid rgba(31, 32, 65, 0.25);
+  background: #FFFFFF;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+
+.range-slider__interval {
+  position: absolute;
+  background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
+  height: $height-interval;
+  right: 10%;
+  left: 0;
+}
+
+.range-slider__handle {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
+  border: $border-handler solid #FFFFFF;
+  width: $side-handler;
+  height: $side-handler;
+  top: -($full-side - $height-interval) / 2;
+  cursor: pointer;
+}
+
+.range-slider__handle--left {
+  left: -($full-side / 2);
+}
+
+.range-slider__handle--right {
+  right: -($full-side / 2);
+}
+

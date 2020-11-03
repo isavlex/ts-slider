@@ -1,18 +1,17 @@
 import './scss/index.scss'
+import {Emitter} from './components/core/emitter'
+import {ListPresenter} from './components/core/presenters'
 
-class Person {
-  name: string
-  age: number
-  constructor(name: string, age: number) {
-    this.name = name
-    this.age = age
-  }
-  getMeta() {
-    console.log(`Name: ${this.name}; Age: ${this.age}`)
-  }
-}
+export const customEvents = new Emitter()
 
-const kate = new Person('Kate', 34)
-kate.getMeta()
-const alex = new Person('Alex', 31)
-alex.getMeta()
+
+const slider = new ListPresenter({
+  selector: '.box',
+  currentValue: 20,
+  minValue: 10,
+  maxValue: 100,
+  floatIndicator: false
+})
+
+
+slider.getView()

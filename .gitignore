@@ -1,5 +1,7 @@
 package-lock.json
+demands
 node_modules
+oldfiles
 dist
 .cache
 .idea

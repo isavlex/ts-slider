@@ -1,52 +1,67 @@
-import {dragAndDropHandler} from './dragAndDropHandler'
+import {Idata} from '../models/models'
 
 export class SliderView {
-  data: any
-  html: any
-  constructor(data: any) {
+  data: Idata
+  html: JQuery = $()
+  constructor(data: Idata) {
     this.data = data
-    this.html = ''
-    this._init(data)
+    this._init()
   }
 
-  _updateView(data: any) {
+  _updateView() {
     this.html.find('[data-type="interval"]').css('right', this.data.currentPosition + 'px')
     this.html.find('[data-type="value"]').text(this.data.currentValue)
   }
 
-  _init(initialData: any) {
+  _init() {
     if (!this.data.range) {
-      console.log(this.data)
       this.html = $(`<div class="range-slider">
-                    <div class="range-slider__head">
-                      <h4 data-type="value" class="range-slider__value">${this.data.currentValue}</h4>
-                    </div>
-                    <div data-type="body" class="range-slider__body">
-                      <div data-type="interval" class="range-slider__interval">
-                        <div data-type="r-handle" class="range-slider__handle range-slider__handle--right"></div>
+                      <div class="range-slider__head">
+                        <h4 data-type="value" class="range-slider__value">${this.data.currentValue}</h4>
                       </div>
-                    </div>
-                  </div>`)
+                      <div data-type="body" class="range-slider__body">
+                        <div data-type="interval" class="range-slider__interval">
+                          <div data-type="r-handle" class="range-slider__handle range-slider__handle--right"></div>
+                        </div>
+                      </div>
+                    </div>`)
     }
-    this._updateView(initialData)
+    this._updateView()
   }
 
   getHtml() {
     return this.html
   }
 
-  addClickHandler(handler: any) {
-    this.html.find('[data-type="body"]').click((e: any) => {
+  addClickHandler(handler: (value: number) => void) {
+    this.html.find('[data-type="body"]').on('click', (e: JQuery.ClickEvent) => {
       if (e.target.dataset.type !== 'r-handle') {
-        const newValue = this.data.widthOfInterval - e.offsetX
+        let newValue = 1
+        if (this.data.widthOfInterval) {
+          newValue = this.data.widthOfInterval - e.offsetX
+        }
         handler(newValue)
       }
     })
   }
 
-  addMousedownHandler(handler: any) {
-    this.html.find('[data-type="r-handle"]').mousedown((e: any) => {
-      dragAndDropHandler(e, handler, this.data.widthOfInterval)
+  addMousedownHandler(handler: (value: number) => void) {
+    this.html.find('[data-type="r-handle"]').on('mousedown', (e: JQuery.MouseDownEvent) => {
+      const handle = e.target
+      const parent = $(handle.closest('[data-type="interval"]'))
+      const coords = handle.getBoundingClientRect()
+      const rightValue = parseInt($(parent).css('right'))
+      $(document).on('mousemove', (event: JQuery.MouseMoveEvent) => {
+        const delta = event.pageX - coords.left
+        const setRight = rightValue - delta
+        if (setRight >= 0 && this.data.widthOfInterval && setRight <= this.data.widthOfInterval) {
+          handler(setRight)
+        }
+      })
+
+      $(document).on('mouseup', () => {
+        $(document).off('mousemove')
+      })
     })
   }
 }

@@ -2,31 +2,38 @@ import {SliderModel} from '../models/models'
 import {SliderView} from '../views/views'
 import {customEvents} from '../../index'
 
+export interface Options {
+  selector: string
+  currentValue: number
+  minValue: number
+  maxValue: number
+  orientation?: string
+  range?: boolean
+  floatIndicator: boolean
+}
+
 export class ListPresenter {
-  view: any
-  model: any
-  options: any
-  constructor(options: any) {
-    this.view
-    this.model
+  view: SliderView
+  model: SliderModel
+  options: Options
+  constructor(options: Options) {
     this.options = options
+    this.model = new SliderModel(this.options)
+    this.view = new SliderView(this.model.get())
     this._init()
   }
 
   _init() {
-    this.model = new SliderModel(this.options)
-    this.view = new SliderView(this.model.get())
-
-    this.view.addClickHandler((value: any) => {
+    this.view.addClickHandler((value: number): void => {
       this.model.changeValue(value)
     })
 
-    this.view.addMousedownHandler((value: any) => {
+    this.view.addMousedownHandler((value: number): void => {
       this.model.changeValue(value)
     })
 
-    customEvents.subscribe('changeValue', () => {
-      this.view._updateView(this.model.get())
+    customEvents.subscribe('changeValue', (): void => {
+      this.view._updateView()
     })
   }
 

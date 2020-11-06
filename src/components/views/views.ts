@@ -21,7 +21,9 @@ export class SliderView {
                       </div>
                       <div data-type="body" class="range-slider__body">
                         <div data-type="interval" class="range-slider__interval">
-                          <div data-type="r-handle" class="range-slider__handle range-slider__handle--right"></div>
+                          <div data-type="r-handle" class="range-slider__handle range-slider__handle--right">
+                            <div data-type="value" class="range-slider__tooltip">${this.data.currentValue}</div>
+                          </div>
                         </div>
                       </div>
                     </div>`)
@@ -35,8 +37,8 @@ export class SliderView {
 
   addClickHandler(handler: (value: number) => void) {
     this.html.find('[data-type="body"]').on('click', (e: JQuery.ClickEvent) => {
-      if (e.target.dataset.type !== 'r-handle') {
-        let newValue = 1
+      if (e.target.dataset.type !== 'r-handle' && e.target.dataset.type !== 'value') {
+        let newValue: number = 1
         if (this.data.widthOfInterval) {
           newValue = this.data.widthOfInterval - e.offsetX
         }
@@ -51,9 +53,10 @@ export class SliderView {
       const parent = $(handle.closest('[data-type="interval"]'))
       const coords = handle.getBoundingClientRect()
       const rightValue = parseInt($(parent).css('right'))
+      let setRight: number = this.data.currentPosition
       $(document).on('mousemove', (event: JQuery.MouseMoveEvent) => {
         const delta = event.pageX - coords.left
-        const setRight = rightValue - delta
+        setRight = rightValue - delta
         if (setRight >= 0 && this.data.widthOfInterval && setRight <= this.data.widthOfInterval) {
           handler(setRight)
         }

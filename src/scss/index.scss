@@ -15,7 +15,7 @@ body {
 }
 
 $height-interval: 6px;
-$side-handler: 12px;
+$side-handler: 20px;
 $border-handler: 2px;
 $full-side: ($border-handler * 2) + $side-handler;
 
@@ -45,7 +45,7 @@ $full-side: ($border-handler * 2) + $side-handler;
 
 .range-slider__interval {
   position: absolute;
-  background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
+  background: #e5e5e5;
   height: $height-interval;
   right: 10%;
   left: 0;
@@ -54,7 +54,7 @@ $full-side: ($border-handler * 2) + $side-handler;
 .range-slider__handle {
   position: absolute;
   border-radius: 50%;
-  background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
+  background: #e75735;
   border: $border-handler solid #FFFFFF;
   width: $side-handler;
   height: $side-handler;
@@ -68,5 +68,22 @@ $full-side: ($border-handler * 2) + $side-handler;
 
 .range-slider__handle--right {
   right: -($full-side / 2);
+}
+
+.range-slider__tooltip {
+  color: #FFFFFF;
+  font-weight: 900;
+  width: 36px;
+  height: 29px;
+  line-height: 24px;
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  // background-color: green;
+  transform: translate(-50%, -100%);
+  text-align: center;
+  user-select: none;
+  background-image: url('../assets/img/slider_bubble_bg.svg');
+  background-repeat: no-repeat;
 }
 

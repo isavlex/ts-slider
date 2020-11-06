@@ -10,8 +10,17 @@ const slider = new ListPresenter({
   currentValue: 20,
   minValue: 10,
   maxValue: 100,
-  floatIndicator: false
+  tooltip: false
+})
+
+const slider2 = new ListPresenter({
+  selector: '.box2',
+  currentValue: 20,
+  minValue: 10,
+  maxValue: 100,
+  tooltip: false
 })
 
 
 slider.getView()
+slider2.getView()

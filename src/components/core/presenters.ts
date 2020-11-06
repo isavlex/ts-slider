@@ -9,7 +9,7 @@ export interface Options {
   maxValue: number
   orientation?: string
   range?: boolean
-  floatIndicator: boolean
+  tooltip: boolean
 }
 
 export class ListPresenter {

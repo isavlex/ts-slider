@@ -38,11 +38,8 @@ export class SliderModel {
   // return value relative to position of handle
   _getValue() {
     if (this.data.widthOfInterval) {
-      return (
-        this.options.maxValue -
-        (this.options.maxValue * this.data.currentPosition) /
-          this.data.widthOfInterval
-      )
+      const result = this.options.maxValue - (this.options.maxValue * this.data.currentPosition) / this.data.widthOfInterval
+      return Math.round(result)
     } else {
       throw new Error('this.data.widthOfInterval - undefined')
     }

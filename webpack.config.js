@@ -10,6 +10,12 @@ const isDev = !isProd
 
 const filename = ext => isDev ? `bundle.${ext}` : `bundle.[hash].${ext}`
 
+const PATHS = {
+  src: path.join(__dirname, './src'),
+  dist: path.join(__dirname, './dist'),
+  assets: 'assets/'
+}
+
 const jsLoaders = () => {
   const loaders = [
     {
@@ -23,18 +29,17 @@ const jsLoaders = () => {
 }
 
 module.exports = {
-  context: path.resolve(__dirname, 'src'),
+  context: PATHS.src,
   mode: 'development',
   entry: './index.ts',
   output: {
     filename: filename('js'),
-    path: path.resolve(__dirname, 'dist')
+    path: PATHS.dist
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
-      '@': path.resolve(__dirname, 'src'),
-      '@core': path.resolve(__dirname, 'src/core')
+      '@': PATHS.src,
     }
   },
   devtool: isDev ? 'source-map' : false,
@@ -53,10 +58,21 @@ module.exports = {
       }
     }),
     new CopyPlugin([
+      // Favicon
       {
-        from: path.resolve(__dirname, 'src/favicon.ico'),
-        to: path.resolve(__dirname, 'dist')
-      }
+        from: `${PATHS.src}/favicon.ico`,
+        to: PATHS.dist
+      },
+      // Images
+      {
+        from: `${PATHS.src}/${PATHS.assets}img`,
+        to: `${PATHS.assets}img`
+      },
+      // Fonts:
+      {
+        from: `${PATHS.src}/${PATHS.assets}fonts`,
+        to: `${PATHS.assets}fonts`
+      },
     ]),
     new webpack.ProvidePlugin({
       $: 'jquery',
@@ -69,6 +85,24 @@ module.exports = {
   module: {
     rules: [
       {
+        // Fonts
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        exclude: `${PATHS.src}/${PATHS.assets}img`,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]'
+        }
+      },
+      {
+        // Images
+        test: /\.(png|jpg|gif|svg)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+        },
+      },
+      {
+        // Styles
         test: /\.s[ac]ss$/i,
         use: [
           {

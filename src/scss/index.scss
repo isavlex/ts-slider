@@ -10,8 +10,12 @@ body {
 
 .box {
   max-width: 400px;
-  margin-top: 100px;
-  margin-left: 600px;
+  margin: 100px auto;
+}
+
+.box2 {
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 $height-interval: 6px;

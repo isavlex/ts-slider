@@ -1,5 +1,5 @@
-import {customEvents} from '../../index'
-import {Options} from '../core/presenters'
+import { customEvents } from '../../index'
+import { Options } from '../core/Presenters'
 
 export type Idata = {
   $root: JQuery
@@ -7,20 +7,24 @@ export type Idata = {
   currentValue: number
   range: boolean
   widthOfInterval: number | undefined
+  tooltip: boolean
 }
 
 export class SliderModel {
   options: Options
+
   data: Idata = {
     $root: $(),
     currentPosition: 0,
     currentValue: 0,
     range: false,
-    widthOfInterval: 0
+    widthOfInterval: 0,
+    tooltip: false,
   }
+
   constructor(options: Options) {
     this.options = options
-    this._init()
+    this.init()
   }
 
   get() {
@@ -28,37 +32,39 @@ export class SliderModel {
   }
 
   // return position relative to maxValue
-  _getPosition(num: number) {
+  private getPosition(num: number) {
     if (this.data.widthOfInterval) {
       return (this.data.widthOfInterval * num) / this.options.maxValue
-    } else {
-      throw new Error('this.data.widthOfInterval - undefined')
     }
+    throw new Error('this.data.widthOfInterval - undefined')
   }
+
   // return value relative to position of handle
-  _getValue() {
+  private getValue() {
     if (this.data.widthOfInterval) {
-      const result = this.options.maxValue - (this.options.maxValue * this.data.currentPosition) / this.data.widthOfInterval
+      const result = this.options.maxValue - (this.options.maxValue * this.data.currentPosition)
+      / this.data.widthOfInterval
       return Math.round(result)
-    } else {
-      throw new Error('this.data.widthOfInterval - undefined')
     }
+    throw new Error('this.data.widthOfInterval - undefined')
   }
+
   // set values of this.data
-  _init() {
+  private init() {
     this.data.$root = $(this.options.selector)
     this.data.widthOfInterval = this.data.$root.width()
     if (this.data.widthOfInterval) {
-      this.data.currentPosition =
-        this.data.widthOfInterval - this._getPosition(this.options.currentValue)
+      this.data.currentPosition = this.data.widthOfInterval
+      - this.getPosition(this.options.currentValue)
     }
-    this.data.range = this.options.range ? true : false
+    this.data.range = !!this.options.range
     this.data.currentValue = this.options.currentValue
+    this.data.tooltip = this.options.tooltip
   }
 
   changeValue(value: any) {
-    this.data['currentPosition'] = value
-    this.data['currentValue'] = this._getValue()
+    this.data.currentPosition = value
+    this.data.currentValue = this.getValue()
     customEvents.notify('changeValue')
   }
 }

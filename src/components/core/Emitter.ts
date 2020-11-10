@@ -2,18 +2,20 @@ interface IObservers {
   [key: string]: Array<() => void>
 }
 
-export class Emitter {
+export default class Emitter {
   observers: IObservers
+
   constructor() {
     this.observers = {}
   }
 
-  subscribe(eventName: string, fn: () => void) {
+  makeSubscribe(eventName: string, fn: () => void) {
     this.observers[eventName] = this.observers[eventName] || []
     this.observers[eventName].push(fn)
     return () => {
-      this.observers[eventName] = this.observers[eventName]
-          .filter((observer: () => void) => observer !== fn)
+      this.observers[eventName] = this.observers[eventName].filter(
+        (observer: () => void) => observer !== fn,
+      )
     }
   }
 

@@ -1,6 +1,6 @@
-import {SliderModel} from '../models/models'
-import {SliderView} from '../views/views'
-import {customEvents} from '../../index'
+import { SliderModel } from '../models/Models'
+import SliderView from '../views/Views'
+import { customEvents } from '../../index'
 
 export interface Options {
   selector: string
@@ -14,16 +14,19 @@ export interface Options {
 
 export class ListPresenter {
   view: SliderView
+
   model: SliderModel
+
   options: Options
+
   constructor(options: Options) {
     this.options = options
     this.model = new SliderModel(this.options)
     this.view = new SliderView(this.model.get())
-    this._init()
+    this.init()
   }
 
-  _init() {
+  private init() {
     this.view.addClickHandler((value: number): void => {
       this.model.changeValue(value)
     })
@@ -32,8 +35,8 @@ export class ListPresenter {
       this.model.changeValue(value)
     })
 
-    customEvents.subscribe('changeValue', (): void => {
-      this.view._updateView()
+    customEvents.makeSubscribe('changeValue', (): void => {
+      this.view.updateView()
     })
   }
 

@@ -1,0 +1,30 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+      "project": "./tsconfig.json"
+    },
+  "rules": {
+    "semi": "off",
+    "@typescript-eslint/semi": ["off"],
+    "import/no-cycle": "off",
+    "no-param-reassign": "warn"
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "jquery": true
+  },
+  "plugins": [
+    "prettier",
+    "@typescript-eslint",
+    "fsd"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "airbnb-typescript/base",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:fsd/all"
+  ]
+}
+

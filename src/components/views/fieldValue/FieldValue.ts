@@ -6,7 +6,7 @@ export default class FieldValue {
   }
 
   getField(value: number) {
-    return this.tooltip
+    return !this.tooltip
       ? `<div class="range-slider__head">
           <h4 data-type="value" class="range-slider__value">${value}</h4>
         </div>`

@@ -1,4 +1,4 @@
-import { customEvents } from '../../index'
+import { customEvents } from '../app/app'
 import { Options } from '../core/Presenters'
 
 export type Idata = {

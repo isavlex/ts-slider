@@ -1,39 +1,33 @@
 const path = require('path')
-const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-
+const ESLintPlugin = require('eslint-webpack-plugin')
 const isProd = process.env.NODE_ENV === 'production'
 const isDev = !isProd
 
 const filename = (ext) => (isDev ? `bundle.${ext}` : `bundle.[hash].${ext}`)
-
 const PATHS = {
   src: path.join(__dirname, './src'),
   dist: path.join(__dirname, './dist'),
   assets: 'assets/',
 }
 
-const jsLoaders = () => {
-  const loaders = [
-    {
-      loader: 'ts-loader',
-    },
-  ]
-  // if (isDev) {
-  //   loaders.push('eslint-loader')
-  // }
-  return loaders
-}
-
 module.exports = {
   context: PATHS.src,
   mode: 'development',
-  entry: './index.ts',
+  entry: {
+    plugin: `${PATHS.src}/components/app/app.ts`,
+    connection: `${PATHS.src}/connection/connection.ts`,
+  },
   output: {
-    filename: filename('js'),
+    filename: (pathData) => {
+      return pathData.chunk.name === 'plugin' ? 'plugin/tsSlider.min.js' : 'index.js'
+    },
+    library: 'tsSlider',
+    libraryTarget: 'umd',
+    umdNamedDefine: true,
     path: PATHS.dist,
   },
   resolve: {
@@ -57,6 +51,9 @@ module.exports = {
         collapseWhitespace: isProd,
       },
     }),
+    new ESLintPlugin({
+      files: './src/**/*.ts',
+    }),
     new CopyPlugin([
       // Favicon
       {
@@ -68,31 +65,27 @@ module.exports = {
         from: `${PATHS.src}/${PATHS.assets}img`,
         to: `${PATHS.assets}img`,
       },
-      // Fonts:
-      {
-        from: `${PATHS.src}/${PATHS.assets}fonts`,
-        to: `${PATHS.assets}fonts`,
-      },
+      // // Fonts:
+      // {
+      //   from: `${PATHS.src}/${PATHS.assets}fonts`,
+      //   to: `${PATHS.assets}fonts`,
+      // },
     ]),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-    }),
     new MiniCssExtractPlugin({
       filename: filename('css'),
     }),
   ],
   module: {
     rules: [
-      {
-        // Fonts
-        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-        exclude: `${PATHS.src}/${PATHS.assets}img`,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-        },
-      },
+      // {
+      //   // Fonts
+      //   test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+      //   exclude: `${PATHS.src}/${PATHS.assets}img`,
+      //   loader: 'file-loader',
+      //   options: {
+      //     name: '[name].[ext]',
+      //   },
+      // },
       {
         // Images
         test: /\.(png|jpg|gif|svg)$/,
@@ -117,9 +110,16 @@ module.exports = {
         ],
       },
       {
+        test: require.resolve('jquery'),
+        loader: 'expose-loader',
+        options: {
+          exposes: ['$', 'jQuery'],
+        },
+      },
+      {
         test: /\.ts$/,
         exclude: /node_modules/,
-        use: jsLoaders(),
+        use: 'ts-loader',
       },
     ],
   },

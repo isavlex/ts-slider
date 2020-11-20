@@ -36,11 +36,12 @@
     "eslint": "^7.13.0",
     "eslint-config-airbnb-typescript": "^12.0.0",
     "eslint-config-prettier": "^6.15.0",
-    "eslint-loader": "^3.0.3",
     "eslint-plugin-fsd": "^1.0.1",
     "eslint-plugin-html": "^6.1.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.1.4",
+    "eslint-webpack-plugin": "^2.3.0",
+    "expose-loader": "^1.0.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.9.0",
@@ -54,7 +55,6 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.8.3",
     "jquery": "^3.5.1"
   }
 }

@@ -8,7 +8,7 @@ body {
   background-color: #ccc;
 }
 
-.box {
+.js-box {
   max-width: 400px;
   margin: 100px auto;
 }
@@ -21,7 +21,6 @@ body {
 $height-interval: 6px;
 $side-handler: 20px;
 $border-handler: 2px;
-$full-side: ($border-handler * 2) + $side-handler;
 
 // .range-slider {
 
@@ -30,6 +29,7 @@ $full-side: ($border-handler * 2) + $side-handler;
 .range-slider__head {
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 20px;
 }
 
 .range-slider__value {
@@ -62,16 +62,16 @@ $full-side: ($border-handler * 2) + $side-handler;
   border: $border-handler solid #FFFFFF;
   width: $side-handler;
   height: $side-handler;
-  top: -($full-side - $height-interval) / 2;
+  top: -($side-handler - $height-interval) / 2;
   cursor: pointer;
 }
 
 .range-slider__handle--left {
-  left: -($full-side / 2);
+  left: -($side-handler / 2);
 }
 
 .range-slider__handle--right {
-  right: -($full-side / 2);
+  right: -($side-handler / 2);
 }
 
 .range-slider__tooltip {

@@ -1,6 +1,7 @@
 import { SliderModel } from '../models/Models'
 import SliderView from '../views/Views'
-import { customEvents } from '../../index'
+// import { customEvents } from '../../index'
+import { customEvents } from '../app/app'
 
 export interface Options {
   selector: string

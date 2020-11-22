@@ -1,13 +1,20 @@
 import { Idata } from '../models/Models'
 import FieldValue from './fieldValue/FieldValue'
+import Interval from './interval/Interval'
 import Tooltip from './tooltip/Tooltip'
 
 export default class SliderView {
+  options: TsSliderOptions
+
+  widthOfInterval: number
+
   data: Idata
 
   html: JQuery = $()
 
-  constructor(data: Idata) {
+  constructor(options: TsSliderOptions, data: Idata) {
+    this.options = options
+    this.widthOfInterval = options.selector.offsetWidth
     this.data = data
     this.init()
   }
@@ -24,21 +31,14 @@ export default class SliderView {
   }
 
   private init() {
-    if (!this.data.range) {
-      const tooltip = new Tooltip(this.data.tooltip)
-      const fieldValue = new FieldValue(this.data.tooltip)
+    if (!this.options.range) {
+      const tooltip = new Tooltip(this.options.tooltip)
+      const interval = new Interval(tooltip.getTooltip(this.data.currentValue))
+      const fieldValue = new FieldValue(this.options.tooltip)
       this.html = $(
         `<div class="range-slider">
           ${fieldValue.getField(this.data.currentValue)}
-        <div data-type="body" class="range-slider__body">
-          <div data-type="interval" class="range-slider__interval">
-            <div data-type="r-handle"
-            class="range-slider__handle 
-            range-slider__handle--right">
-              ${tooltip.getTooltip(this.data.currentValue)}
-            </div>
-          </div>
-          </div>
+          ${interval.getInterval()}
         </div>`,
       )
     }
@@ -55,9 +55,7 @@ export default class SliderView {
       && event.target.dataset.type !== 'value'
     ) {
       let newValue: number = 1
-      if (this.data.widthOfInterval) {
-        newValue = this.data.widthOfInterval - event.offsetX
-      }
+      newValue = this.widthOfInterval - event.offsetX
       event.data.handler(newValue)
     }
   }
@@ -71,8 +69,7 @@ export default class SliderView {
   isAllowedForMousemoveHandler(setRight: number) {
     return (
       setRight >= 0
-      && this.data.widthOfInterval
-      && setRight <= this.data.widthOfInterval
+      && setRight <= this.widthOfInterval
     )
   }
 

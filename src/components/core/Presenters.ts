@@ -1,29 +1,18 @@
 import { SliderModel } from '../models/Models'
 import SliderView from '../views/Views'
-// import { customEvents } from '../../index'
 import { customEvents } from '../app/app'
 
-export interface Options {
-  selector: string
-  currentValue: number
-  minValue: number
-  maxValue: number
-  orientation?: string
-  range?: boolean
-  tooltip: boolean
-}
-
-export class ListPresenter {
+export default class ListPresenter {
   view: SliderView
 
   model: SliderModel
 
-  options: Options
+  options: TsSliderOptions
 
-  constructor(options: Options) {
+  constructor(options: TsSliderOptions) {
     this.options = options
     this.model = new SliderModel(this.options)
-    this.view = new SliderView(this.model.get())
+    this.view = new SliderView(this.options, this.model.get())
     this.init()
   }
 

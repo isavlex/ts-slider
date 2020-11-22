@@ -1,29 +1,23 @@
 import { customEvents } from '../app/app'
-import { Options } from '../core/Presenters'
 
-export type Idata = {
-  $root: JQuery
+export interface Idata {
   currentPosition: number
   currentValue: number
-  range: boolean
-  widthOfInterval: number | undefined
-  tooltip: boolean
 }
 
 export class SliderModel {
-  options: Options
+  options: TsSliderOptions
+
+  widthOfInterval: number
 
   data: Idata = {
-    $root: $(),
     currentPosition: 0,
     currentValue: 0,
-    range: false,
-    widthOfInterval: 0,
-    tooltip: false,
   }
 
-  constructor(options: Options) {
+  constructor(options: TsSliderOptions) {
     this.options = options
+    this.widthOfInterval = options.selector.offsetWidth
     this.init()
   }
 
@@ -33,33 +27,21 @@ export class SliderModel {
 
   // return position relative to maxValue
   private getPosition(num: number) {
-    if (this.data.widthOfInterval) {
-      return (this.data.widthOfInterval * num) / this.options.maxValue
-    }
-    throw new Error('this.data.widthOfInterval - undefined')
+    return (this.widthOfInterval * num) / this.options.maxValue
   }
 
   // return value relative to position of handle
   private getValue() {
-    if (this.data.widthOfInterval) {
-      const result = this.options.maxValue - (this.options.maxValue * this.data.currentPosition)
-      / this.data.widthOfInterval
-      return Math.round(result)
-    }
-    throw new Error('this.data.widthOfInterval - undefined')
+    const result = this.options.maxValue - (this.options.maxValue * this.data.currentPosition)
+    / this.widthOfInterval
+    return Math.round(result)
   }
 
   // set values of this.data
   private init() {
-    this.data.$root = $(this.options.selector)
-    this.data.widthOfInterval = this.data.$root.width()
-    if (this.data.widthOfInterval) {
-      this.data.currentPosition = this.data.widthOfInterval
-      - this.getPosition(this.options.currentValue)
-    }
-    this.data.range = !!this.options.range
+    this.data.currentPosition = this.widthOfInterval
+    - this.getPosition(this.options.currentValue)
     this.data.currentValue = this.options.currentValue
-    this.data.tooltip = this.options.tooltip
   }
 
   changeValue(value: any) {

@@ -1,18 +1,23 @@
+/* eslint-disable prefer-destructuring */
 import { customEvents } from '../app/app'
 
 export interface Idata {
-  currentPosition: number
-  currentValue: number
+  currentPositionRight: number
+  currentValueRight: number
+  currentPositionLeft: number
+  currentValueLeft: number
 }
 
-export class SliderModel {
+export default class SliderModel {
   options: TsSliderOptions
 
   widthOfInterval: number
 
   data: Idata = {
-    currentPosition: 0,
-    currentValue: 0,
+    currentPositionRight: 0,
+    currentValueRight: 0,
+    currentPositionLeft: 0,
+    currentValueLeft: 0,
   }
 
   constructor(options: TsSliderOptions) {
@@ -31,22 +36,43 @@ export class SliderModel {
   }
 
   // return value relative to position of handle
-  private getValue() {
-    const result = this.options.maxValue - (this.options.maxValue * this.data.currentPosition)
-    / this.widthOfInterval
+  private getValue(handle: string) {
+    let result
+    if (handle === 'right') {
+      result = this.options.maxValue
+        - (this.options.maxValue * this.data.currentPositionRight)
+        / this.widthOfInterval
+    } else {
+      result = (this.options.maxValue * this.data.currentPositionLeft)
+        / this.widthOfInterval
+    }
     return Math.round(result)
   }
 
   // set values of this.data
   private init() {
-    this.data.currentPosition = this.widthOfInterval
-    - this.getPosition(this.options.currentValue)
-    this.data.currentValue = this.options.currentValue
+    if (!this.options.range) {
+      this.data.currentPositionRight = this.widthOfInterval
+        - this.getPosition(this.options.currentValue[0])
+      this.data.currentValueRight = this.options.currentValue[0]
+    } else {
+      this.data.currentPositionLeft = this.getPosition(this.options.currentValue[0])
+      this.data.currentPositionRight = this.widthOfInterval
+        - this.getPosition(this.options.currentValue[1])
+      this.data.currentValueLeft = this.options.currentValue[0]
+      this.data.currentValueRight = this.options.currentValue[1]
+    }
   }
 
-  changeValue(value: any) {
-    this.data.currentPosition = value
-    this.data.currentValue = this.getValue()
-    customEvents.notify('changeValue')
+  changeValue(value: number, handle: string) {
+    if (handle === 'right') {
+      this.data.currentPositionRight = value
+      this.data.currentValueRight = this.getValue('right')
+      customEvents.notify('changeValue')
+    } else {
+      this.data.currentPositionLeft = value
+      this.data.currentValueLeft = this.getValue('left')
+      customEvents.notify('changeValue')
+    }
   }
 }

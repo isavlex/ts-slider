@@ -11,11 +11,12 @@ export const customEvents = new Emitter();
   $.fn.tsSlider = function (options?): JQuery {
     const settings: TsSliderOptions = $.extend(
       {
-        currentValue: 100,
-        minValue: 10,
+        currentValue: [100],
+        minValue: 0,
         maxValue: 100,
         tooltip: false,
         scale: false,
+        stepsOfScale: 4,
         range: false,
       },
       options,

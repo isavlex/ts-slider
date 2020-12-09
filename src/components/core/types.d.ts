@@ -1,11 +1,11 @@
 declare interface TsSliderOptions {
   selector: HTMLElement
-  currentValue: number
+  currentValue: number[]
   minValue: number
   maxValue: number
   orientation?: string
   range?: boolean
-  scale?: boolean
-  stepOfScale?: number
+  scale: boolean
+  stepsOfScale: number | number[]
   tooltip: boolean
 }

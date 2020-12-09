@@ -88,7 +88,6 @@ $border-handler: 2px;
   position: absolute;
   top: -50%;
   left: 50%;
-  // background-color: green;
   transform: translate(-50%, -100%);
   text-align: center;
   user-select: none;
@@ -96,3 +95,14 @@ $border-handler: 2px;
   background-repeat: no-repeat;
 }
 
+.range-slider__scale {
+  position: relative;
+  margin-top: 10px;
+}
+
+.range-slider__step {
+  position: absolute;
+  transform: translatex(-50%);
+  user-select: none;
+  cursor: pointer;
+}

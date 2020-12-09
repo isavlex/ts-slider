@@ -1,17 +1,31 @@
 export default class Interval {
-  tooltip: string
+  tooltipLeft: string
 
-  constructor(tooltip: string) {
-    this.tooltip = tooltip
+  tooltipRight: string
+
+  range?: boolean
+
+  constructor(tooltipLeft: string, tooltipRight: string, range?: boolean) {
+    this.tooltipLeft = tooltipLeft
+    this.tooltipRight = tooltipRight
+    this.range = range
   }
 
   getInterval() {
+    const lHandle = this.range
+      ? `<div data-type="left-handle"
+          class="range-slider__handle 
+          range-slider__handle--left">
+          ${this.tooltipLeft}
+        </div>`
+      : ''
     return `<div data-type="body" class="range-slider__body">
               <div data-type="interval" class="range-slider__interval">
-                <div data-type="r-handle"
+                ${lHandle}
+                <div data-type="right-handle"
                   class="range-slider__handle 
                   range-slider__handle--right">
-                    ${this.tooltip}
+                    ${this.tooltipRight}
                   </div>
                 </div>
               </div>`

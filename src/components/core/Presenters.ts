@@ -1,4 +1,4 @@
-import { SliderModel } from '../models/Models'
+import SliderModel from '../models/Models'
 import SliderView from '../views/Views'
 import { customEvents } from '../app/app'
 
@@ -17,12 +17,12 @@ export default class ListPresenter {
   }
 
   private init() {
-    this.view.addClickHandler((value: number): void => {
-      this.model.changeValue(value)
+    this.view.addClickHandler((value: number, handle: string): void => {
+      this.model.changeValue(value, handle)
     })
 
-    this.view.addMousedownHandler((value: number): void => {
-      this.model.changeValue(value)
+    this.view.addMouseDownHandler((value: number, handle: string): void => {
+      this.model.changeValue(value, handle)
     })
 
     customEvents.makeSubscribe('changeValue', (): void => {

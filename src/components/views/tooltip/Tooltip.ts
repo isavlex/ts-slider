@@ -5,9 +5,9 @@ export default class Tooltip {
     this.tooltip = tooltip
   }
 
-  getTooltip(value: number) {
+  getTooltip(value: number, position: string) {
     return this.tooltip
-      ? `<div data-type="value" class="range-slider__tooltip">${value}</div>`
+      ? `<div data-tooltip="${position}" data-type="${position}-handle" class="range-slider__tooltip">${value}</div>`
       : ''
   }
 }

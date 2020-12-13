@@ -6,8 +6,9 @@ $('.js-box').tsSlider({
 $('.js-box2').tsSlider({
   currentValue: [15, 80],
   range: true,
+  separator: '/',
   minValue: 10,
-  tooltip: true,
+  tooltip: false,
   scale: true,
   stepsOfScale: [15, 30, 50, 70, 100],
 });

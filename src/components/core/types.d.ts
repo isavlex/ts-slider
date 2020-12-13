@@ -5,6 +5,7 @@ declare interface TsSliderOptions {
   maxValue: number
   orientation?: string
   range?: boolean
+  separator?: string
   scale: boolean
   stepsOfScale: number | number[]
   tooltip: boolean

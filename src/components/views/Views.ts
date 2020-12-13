@@ -29,7 +29,8 @@ export default class SliderView {
       left: `${this.data.currentPositionLeft}px`,
       right: `${this.data.currentPositionRight}px`,
     })
-    this.html.find('[data-type="value"]').text(this.data.currentValueRight)
+    this.html.find('[data-type="left-value"]').text(this.data.currentValueLeft)
+    this.html.find('[data-type="right-value"]').text(this.data.currentValueRight)
     this.html.find('[data-tooltip="left"]').text(this.data.currentValueLeft)
     this.html.find('[data-tooltip="right"]').text(this.data.currentValueRight)
   }
@@ -41,11 +42,11 @@ export default class SliderView {
       tooltip.getTooltip(this.data.currentValueRight, 'right'),
       this.options.range,
     )
-    const fieldValue = new FieldValue(this.options.tooltip)
+    const fieldValue = new FieldValue(this.options.tooltip, this.options.range)
     const scale = new Scale(this.options)
     this.html = $(
       `<div class="range-slider">
-        ${fieldValue.getField(this.data.currentValueRight)}
+        ${fieldValue.getField(this.data.currentValueRight, this.data.currentValueLeft, this.options.separator)}
         ${interval.getInterval()}
         ${scale.getScale()}
       </div>`,
@@ -111,8 +112,15 @@ export default class SliderView {
     this.html.find('[data-type="scale"]').on('click', { handler }, this.clickHandler.bind(this))
   }
 
-  private isAllowedForMousemoveHandler(set: number) {
-    return set >= 0 && set <= this.widthOfInterval
+  private isAllowedForMousemoveHandler(set: number, handle?: string) {
+    const result = handle === 'left'
+      ? set >= 0
+        && set <= this.widthOfInterval
+        && set < this.widthOfInterval - this.data.currentPositionRight
+      : set >= 0
+        && set <= this.widthOfInterval
+        && this.widthOfInterval - set > this.data.currentPositionLeft
+    return result
   }
 
   private destroyMouseMoveHandler() {
@@ -124,7 +132,7 @@ export default class SliderView {
     const delta = event.pageX - event.data.coords.left
     // eslint-disable-next-line no-param-reassign
     event.data.setLeft = event.data.leftValue + delta
-    if (this.isAllowedForMousemoveHandler(event.data.setLeft)) {
+    if (this.isAllowedForMousemoveHandler(event.data.setLeft, 'left')) {
       event.data.handler(event.data.setLeft, 'left')
     }
   }
@@ -152,7 +160,7 @@ export default class SliderView {
     const delta = event.pageX - event.data.coords.left
     // eslint-disable-next-line no-param-reassign
     event.data.setRight = event.data.rightValue - delta
-    if (this.isAllowedForMousemoveHandler(event.data.setRight)) {
+    if (this.isAllowedForMousemoveHandler(event.data.setRight, 'right')) {
       event.data.handler(event.data.setRight, 'right')
     }
   }

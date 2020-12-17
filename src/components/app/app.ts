@@ -18,6 +18,7 @@ export const customEvents = new Emitter();
         scale: false,
         stepsOfScale: 4,
         range: false,
+        orientation: 'horizontal',
         separator: '-',
       },
       options,

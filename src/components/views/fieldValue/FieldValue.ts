@@ -14,9 +14,9 @@ export default class FieldValue {
     }
     const values = this.range
       ? `<span data-type="left-value" class="range-slider__value">${leftValue}</span>
-          ${separator}
+        <span class="range-slider__separator">${separator}</span>
         <span data-type="right-value" class="range-slider__value">${rightValue}</span>`
       : `<span data-type="right-value" class="range-slider__value">${rightValue}</span>`
-    return !this.tooltip ? `<div class="range-slider__value">${values}</div>` : ''
+    return !this.tooltip ? `<div class="range-slider__values">${values}</div>` : ''
   }
 }

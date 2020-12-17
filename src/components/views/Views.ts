@@ -25,10 +25,17 @@ export default class SliderView {
   }
 
   public updateView() {
-    this.html.find('[data-type="interval"]').css({
-      left: `${this.data.currentPositionLeft}px`,
-      right: `${this.data.currentPositionRight}px`,
-    })
+    if (this.options.orientation !== 'vertical') {
+      this.html.find('[data-type="interval"]').css({
+        left: `${this.data.currentPositionLeft}px`,
+        right: `${this.data.currentPositionRight}px`,
+      })
+    } else {
+      this.html.find('[data-type="interval"]').css({
+        top: `${this.data.currentPositionLeft}px`,
+        bottom: `${this.data.currentPositionRight}px`,
+      })
+    }
     this.html.find('[data-type="left-value"]').text(this.data.currentValueLeft)
     this.html.find('[data-type="right-value"]').text(this.data.currentValueRight)
     this.html.find('[data-tooltip="left"]').text(this.data.currentValueLeft)
@@ -36,16 +43,18 @@ export default class SliderView {
   }
 
   private init() {
-    const tooltip = new Tooltip(this.options.tooltip)
+    const tooltip = new Tooltip(this.options.tooltip, this.options.orientation)
     const interval = new Interval(
       tooltip.getTooltip(this.data.currentValueLeft, 'left'),
       tooltip.getTooltip(this.data.currentValueRight, 'right'),
       this.options.range,
+      this.options.orientation,
     )
     const fieldValue = new FieldValue(this.options.tooltip, this.options.range)
     const scale = new Scale(this.options)
+    const verticalMode = this.options.orientation === 'vertical' ? 'range-slider--vertical' : ''
     this.html = $(
-      `<div class="range-slider">
+      `<div class="range-slider ${verticalMode}">
         ${fieldValue.getField(this.data.currentValueRight, this.data.currentValueLeft, this.options.separator)}
         ${interval.getInterval()}
         ${scale.getScale()}
@@ -71,7 +80,12 @@ export default class SliderView {
   // eslint-disable-next-line class-methods-use-this
   private getPosition(event: JQuery.ClickEvent) {
     const coords = event.currentTarget.getBoundingClientRect()
-    const position = event.pageX - coords.left
+    let position
+    if (this.options.orientation !== 'vertical') {
+      position = event.pageX - coords.left
+    } else {
+      position = event.clientY - coords.top
+    }
     return position
   }
 
@@ -129,9 +143,16 @@ export default class SliderView {
   }
 
   mousemoveLeftHandler(event: JQuery.MouseMoveEvent) {
-    const delta = event.pageX - event.data.coords.left
-    // eslint-disable-next-line no-param-reassign
-    event.data.setLeft = event.data.leftValue + delta
+    let delta: number
+    if (this.options.orientation !== 'vertical') {
+      delta = event.pageX - event.data.coords.left
+      // eslint-disable-next-line no-param-reassign
+      event.data.setLeft = event.data.leftValue + delta
+    } else {
+      delta = event.clientY - event.data.coords.top
+      // eslint-disable-next-line no-param-reassign
+      event.data.setLeft = event.data.topValue + delta
+    }
     if (this.isAllowedForMousemoveHandler(event.data.setLeft, 'left')) {
       event.data.handler(event.data.setLeft, 'left')
     }
@@ -142,6 +163,7 @@ export default class SliderView {
     const parent = $(handle.closest('[data-type="interval"]'))
     const coords = handle.getBoundingClientRect()
     const leftValue = parseInt($(parent).css('left'), 10)
+    const topValue = parseInt($(parent).css('top'), 10)
     const setLeft: number = this.data.currentPositionLeft
     $(document).on(
       'mousemove',
@@ -149,6 +171,7 @@ export default class SliderView {
         setLeft,
         coords,
         leftValue,
+        topValue,
         handler: event.data.handler,
       },
       this.mousemoveLeftHandler.bind(this),
@@ -157,9 +180,16 @@ export default class SliderView {
   }
 
   mousemoveRightHandler(event: JQuery.MouseMoveEvent) {
-    const delta = event.pageX - event.data.coords.left
-    // eslint-disable-next-line no-param-reassign
-    event.data.setRight = event.data.rightValue - delta
+    let delta
+    if (this.options.orientation !== 'vertical') {
+      delta = event.pageX - event.data.coords.left
+      // eslint-disable-next-line no-param-reassign
+      event.data.setRight = event.data.rightValue - delta
+    } else {
+      delta = event.clientY - event.data.coords.bottom
+      // eslint-disable-next-line no-param-reassign
+      event.data.setRight = event.data.bottomValue - delta
+    }
     if (this.isAllowedForMousemoveHandler(event.data.setRight, 'right')) {
       event.data.handler(event.data.setRight, 'right')
     }
@@ -170,6 +200,7 @@ export default class SliderView {
     const parent = $(handle.closest('[data-type="interval"]'))
     const coords = handle.getBoundingClientRect()
     const rightValue = parseInt($(parent).css('right'), 10)
+    const bottomValue = parseInt($(parent).css('bottom'), 10)
     const setRight: number = this.data.currentPositionRight
     $(document).on(
       'mousemove',
@@ -177,6 +208,7 @@ export default class SliderView {
         setRight,
         coords,
         rightValue,
+        bottomValue,
         handler: event.data.handler,
       },
       this.mousemoveRightHandler.bind(this),

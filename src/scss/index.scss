@@ -18,18 +18,25 @@ body {
   margin: 100px auto;
 }
 
+.js-box3 {
+  max-width: 400px;
+  margin: 100px auto;
+  height: 400px;
+  background-color: aqua;
+}
+
 .box2 {
   max-width: 600px;
   margin: 0 auto;
 }
 
-$height-interval: 6px;
+$size-interval: 6px;
 $side-handler: 20px;
 $border-handler: 2px;
 
-// .range-slider {
-
-// }
+.range-slider--vertical {
+  height: 100%;
+}
 
 .range-slider__head {
   display: flex;
@@ -37,50 +44,74 @@ $border-handler: 2px;
   margin-bottom: 20px;
 }
 
-.range-slider__value {
-  user-select: none;
+.range-slider__values {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  font-weight: 700;
 }
 
 .range-slider__body {
   position: relative;
   width: 100%;
-  height: 6px;
+  height: $size-interval;
   border: 1px solid rgba(31, 32, 65, 0.25);
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 3px;
   cursor: pointer;
 }
 
+.range-slider__body--vertical {
+  width: $size-interval;
+  height: 100%;
+}
 
 .range-slider__interval {
   position: absolute;
   background: #e5e5e5;
-  height: $height-interval;
-  right: 10%;
-  left: 0;
+  height: $size-interval;
+}
+
+.range-slider__interval--vertical {
+  height: auto;
+  width: $size-interval;
+  top: 30px;
+  bottom: 30px;
 }
 
 .range-slider__handle {
   position: absolute;
   border-radius: 50%;
   background: #e75735;
-  border: $border-handler solid #FFFFFF;
+  border: $border-handler solid #ffffff;
   width: $side-handler;
   height: $side-handler;
-  top: -($side-handler - $height-interval) / 2;
+  // top: -($side-handler - $size-interval) / 2;
   cursor: pointer;
 }
 
 .range-slider__handle--left {
   left: -($side-handler / 2);
+  top: -($side-handler - $size-interval) / 2;
 }
 
 .range-slider__handle--right {
   right: -($side-handler / 2);
+  top: -($side-handler - $size-interval) / 2;
+}
+
+.range-slider__handle--top {
+  top: -($side-handler / 2);
+  left: -($side-handler - $size-interval) / 2;
+}
+
+.range-slider__handle--bottom {
+  bottom: -($side-handler / 2);
+  left: -($side-handler - $size-interval) / 2;
 }
 
 .range-slider__tooltip {
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 900;
   width: 36px;
   height: 29px;
@@ -93,6 +124,18 @@ $border-handler: 2px;
   user-select: none;
   background-image: url('../assets/img/slider_bubble_bg.svg');
   background-repeat: no-repeat;
+}
+
+.range-slider__tooltip--vertical {
+  width: 29px;
+  height: 36px;
+  background-image: url('../assets/img/slider_bubble_bg_vertical.svg');
+  top: 50%;
+  left: -50%;
+  transform: translate(-100%, -50%);
+  padding-left: 5px;
+  text-align: left;
+  line-height: 36px;
 }
 
 .range-slider__scale {

@@ -10,6 +10,8 @@ export default class Scale {
   }
 
   private getSteps() {
+    const topOrLeft = this.options.orientation !== 'vertical' ? 'left' : 'top'
+    const verticalMode = this.options.orientation !== 'vertical' ? '' : 'range-slider__step--vertical'
     let html = ''
     if (this.options.stepsOfScale > 10) {
       throw new Error('"stepsOfScale" should be less than 11')
@@ -28,14 +30,14 @@ export default class Scale {
         } else {
           valueOfStep = this.options.maxValue
         }
-        html += `<div data-type="scale" style="left: ${this.getPosition(valueOfStep)}px" class="range-slider__step">${
+        html += `<div data-type="scale" style="${topOrLeft}: ${this.getPosition(valueOfStep)}px" class="range-slider__step ${verticalMode}">${
           valueOfStep
         }</div>`
       }
     } else {
       this.options.stepsOfScale.forEach((step: number) => {
         if (step < this.options.minValue || step > this.options.maxValue) return
-        html += `<div data-type="scale" style="left: ${this.getPosition(step)}px" class="range-slider__step">${
+        html += `<div data-type="scale" style="${topOrLeft}: ${this.getPosition(step)}px" class="range-slider__step ${verticalMode}">${
           step
         }</div>`
       })
@@ -44,8 +46,10 @@ export default class Scale {
   }
 
   getScale() {
+    const verticalMode = this.options.orientation !== 'vertical' ? '' : 'range-slider__scale--vertical'
+
     return this.options.scale
-      ? `<div class="range-slider__scale">
+      ? `<div class="range-slider__scale ${verticalMode}">
           ${this.getSteps()}  
         </div>`
       : ''

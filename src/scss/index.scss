@@ -36,6 +36,7 @@ $border-handler: 2px;
 
 .range-slider--vertical {
   height: 100%;
+  display: flex;
 }
 
 .range-slider__head {
@@ -133,8 +134,7 @@ $border-handler: 2px;
   top: 50%;
   left: -50%;
   transform: translate(-100%, -50%);
-  padding-left: 5px;
-  text-align: left;
+  text-align: center;
   line-height: 36px;
 }
 
@@ -143,9 +143,18 @@ $border-handler: 2px;
   margin-top: 10px;
 }
 
+.range-slider__scale--vertical {
+  margin-top: 0;
+  margin-left: 30px;
+}
+
 .range-slider__step {
   position: absolute;
   transform: translatex(-50%);
   user-select: none;
   cursor: pointer;
+}
+
+.range-slider__step--vertical {
+  transform: translate(0, -50%);
 }

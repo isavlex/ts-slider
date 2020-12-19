@@ -21,6 +21,6 @@ $('.js-box3').tsSlider({
   separator: '/',
   minValue: 10,
   tooltip: true,
-  scale: false,
+  scale: true,
   stepsOfScale: [15, 30, 50, 70, 100],
 });

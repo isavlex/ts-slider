@@ -9,6 +9,8 @@ export default class SliderView {
 
   widthOfInterval: number
 
+  heightOfInterval: number
+
   data: Idata
 
   html: JQuery = $()
@@ -16,6 +18,7 @@ export default class SliderView {
   constructor(options: TsSliderOptions, data: Idata) {
     this.options = options
     this.widthOfInterval = options.selector.offsetWidth
+    this.heightOfInterval = options.selector.offsetHeight
     this.data = data
     this.init()
   }
@@ -90,17 +93,22 @@ export default class SliderView {
   }
 
   private isLeftOrRightHandle(event: JQuery.ClickEvent, mode?: string) {
-    const position = mode ? event.target.offsetLeft : this.getPosition(event)
-    const rightHandle = this.widthOfInterval - this.data.currentPositionRight
+    const leftOrTopPosition = this.options.orientation !== 'vertical'
+      ? event.target.offsetLeft
+      : event.target.offsetTop
+    const position = mode ? leftOrTopPosition : this.getPosition(event)
+    const rightHandle = this.options.orientation !== 'vertical'
+      ? this.widthOfInterval - this.data.currentPositionRight
+      : this.heightOfInterval - this.data.currentPositionRight
     const leftHandle = this.data.currentPositionLeft
     const middleOfHandles = (rightHandle - leftHandle) / 2
     const defineHandle = position > leftHandle + middleOfHandles ? 'right' : 'left'
     return defineHandle
   }
 
-  private clickHandler(event: JQuery.ClickEvent) {
+  private clickHandlerInterval(event: JQuery.ClickEvent) {
     const position = this.getPosition(event)
-    let newValue = this.isLeftOrRightHandle(event) === 'left'
+    const newValue = this.isLeftOrRightHandle(event) === 'left'
       ? position
       : this.widthOfInterval - position
     if (this.isAllowedForClickHandler(event) && !this.options.range) {
@@ -109,21 +117,32 @@ export default class SliderView {
     if (this.isAllowedForClickHandler(event) && this.options.range) {
       event.data.handler(newValue, this.isLeftOrRightHandle(event))
     }
-    if (event.target.dataset.type === 'scale' && !this.options.range) {
-      newValue = this.widthOfInterval - event.target.offsetLeft
+  }
+
+  private clickHandlerScale(event: JQuery.ClickEvent) {
+    let newValue
+    if (!this.options.range) {
+      newValue = this.options.orientation !== 'vertical'
+        ? this.widthOfInterval - event.target.offsetLeft
+        : this.heightOfInterval - event.target.offsetTop
       event.data.handler(newValue, 'right')
-    }
-    if (event.target.dataset.type === 'scale' && this.options.range) {
-      newValue = this.isLeftOrRightHandle(event, 'scale') === 'left'
+    } else {
+      const gorizontalOrVerticalLeft = this.options.orientation !== 'vertical'
         ? event.target.offsetLeft
-        : this.widthOfInterval - event.target.offsetLeft
+        : event.target.offsetTop
+      const gorizontalOrVerticalRight = this.options.orientation !== 'vertical'
+        ? this.widthOfInterval - event.target.offsetLeft
+        : this.heightOfInterval - event.target.offsetTop
+      newValue = this.isLeftOrRightHandle(event, 'scale') === 'left'
+        ? gorizontalOrVerticalLeft
+        : gorizontalOrVerticalRight
       event.data.handler(newValue, this.isLeftOrRightHandle(event, 'scale'))
     }
   }
 
   addClickHandler(handler: (value: number, handle: string) => void) {
-    this.html.find('[data-type="body"]').on('click', { handler }, this.clickHandler.bind(this))
-    this.html.find('[data-type="scale"]').on('click', { handler }, this.clickHandler.bind(this))
+    this.html.find('[data-type="body"]').on('click', { handler }, this.clickHandlerInterval.bind(this))
+    this.html.find('[data-type="scale"]').on('click', { handler }, this.clickHandlerScale.bind(this))
   }
 
   private isAllowedForMousemoveHandler(set: number, handle?: string) {
@@ -144,17 +163,16 @@ export default class SliderView {
 
   mousemoveLeftHandler(event: JQuery.MouseMoveEvent) {
     let delta: number
+    let setLeft: number
     if (this.options.orientation !== 'vertical') {
       delta = event.pageX - event.data.coords.left
-      // eslint-disable-next-line no-param-reassign
-      event.data.setLeft = event.data.leftValue + delta
+      setLeft = event.data.leftValue + delta
     } else {
       delta = event.clientY - event.data.coords.top
-      // eslint-disable-next-line no-param-reassign
-      event.data.setLeft = event.data.topValue + delta
+      setLeft = event.data.topValue + delta
     }
-    if (this.isAllowedForMousemoveHandler(event.data.setLeft, 'left')) {
-      event.data.handler(event.data.setLeft, 'left')
+    if (this.isAllowedForMousemoveHandler(setLeft, 'left')) {
+      event.data.handler(setLeft, 'left')
     }
   }
 
@@ -164,11 +182,9 @@ export default class SliderView {
     const coords = handle.getBoundingClientRect()
     const leftValue = parseInt($(parent).css('left'), 10)
     const topValue = parseInt($(parent).css('top'), 10)
-    const setLeft: number = this.data.currentPositionLeft
     $(document).on(
       'mousemove',
       {
-        setLeft,
         coords,
         leftValue,
         topValue,
@@ -180,18 +196,17 @@ export default class SliderView {
   }
 
   mousemoveRightHandler(event: JQuery.MouseMoveEvent) {
-    let delta
+    let delta: number
+    let setRight: number
     if (this.options.orientation !== 'vertical') {
       delta = event.pageX - event.data.coords.left
-      // eslint-disable-next-line no-param-reassign
-      event.data.setRight = event.data.rightValue - delta
+      setRight = event.data.rightValue - delta
     } else {
       delta = event.clientY - event.data.coords.bottom
-      // eslint-disable-next-line no-param-reassign
-      event.data.setRight = event.data.bottomValue - delta
+      setRight = event.data.bottomValue - delta
     }
-    if (this.isAllowedForMousemoveHandler(event.data.setRight, 'right')) {
-      event.data.handler(event.data.setRight, 'right')
+    if (this.isAllowedForMousemoveHandler(setRight, 'right')) {
+      event.data.handler(setRight, 'right')
     }
   }
 
@@ -201,11 +216,9 @@ export default class SliderView {
     const coords = handle.getBoundingClientRect()
     const rightValue = parseInt($(parent).css('right'), 10)
     const bottomValue = parseInt($(parent).css('bottom'), 10)
-    const setRight: number = this.data.currentPositionRight
     $(document).on(
       'mousemove',
       {
-        setRight,
         coords,
         rightValue,
         bottomValue,

@@ -24,3 +24,15 @@ $('.js-box3').tsSlider({
   scale: true,
   stepsOfScale: [15, 30, 50, 70, 100],
 });
+
+$('.js-box4').tsSlider({
+  currentValue: [10, 20],
+  range: true,
+  orientation: 'vertical',
+  separator: '/',
+  minValue: 10,
+  tooltip: true,
+  scale: true,
+  stepsOfScale: [10, 30, 50, 70, 100],
+  step: 5,
+});

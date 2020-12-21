@@ -49,6 +49,15 @@ export default class SliderModel {
     return Math.round(result)
   }
 
+  private getStep(value: number, mode: string = '') {
+    if (this.options.step) {
+      const step = mode === 'position' ? this.getPosition(this.options.step) : this.options.step
+      const module = value % step
+      return value - module
+    }
+    return value
+  }
+
   // set values of this.data
   private init() {
     if (!this.options.range) {
@@ -66,12 +75,12 @@ export default class SliderModel {
 
   changeValue(value: number, handle: string) {
     if (handle === 'right') {
-      this.data.currentPositionRight = value
-      this.data.currentValueRight = this.getValue('right')
+      this.data.currentPositionRight = this.getStep(value, 'position')
+      this.data.currentValueRight = this.getStep(this.getValue('right'))
       customEvents.notify('changeValue')
     } else {
-      this.data.currentPositionLeft = value
-      this.data.currentValueLeft = this.getValue('left')
+      this.data.currentPositionLeft = this.getStep(value, 'position')
+      this.data.currentValueLeft = this.getStep(this.getValue('left'))
       customEvents.notify('changeValue')
     }
   }

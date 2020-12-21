@@ -3,6 +3,7 @@ declare interface TsSliderOptions {
   currentValue: number[]
   minValue: number
   maxValue: number
+  step?: number
   orientation?: string
   range?: boolean
   separator?: string
